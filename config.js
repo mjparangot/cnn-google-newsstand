@@ -41,7 +41,8 @@ nconf.env([
     'HYPATIA_TIMEOUT',
     'ACCESS_KEY_ID',
     'SECRET_ACCESS_KEY',
-    'PORT'
+    'PORT',
+    'LOGZIO_TOKEN'
 ]);
 
 

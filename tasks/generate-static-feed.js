@@ -35,6 +35,7 @@ const  request = require('request'),
     config = require('../config.js'),
     fg = new FeedGenerator(),
     enableElectionStory = config.get('gnsTurnOnElectionModule'),
+    log = require('cnn-logger')({logzio: {tag: 'cnn-google-newsstand'}}),
     POST_TO_LSD = false; // <---- TODO - SET THIS TO THE PROPER VALUE BASED ON WHAT YOU ARE WANTING TO DO
 
 let s3Images = undefined;
@@ -46,6 +47,8 @@ function postToLSD(data) {
         hosts = config.get('lsdHosts');
 
     debugLog('postToLSD() called');
+    log.debug('postToLSD() called');
+
     // debugLog(data);
 
     hosts.split(',').forEach((host) => {
@@ -57,8 +60,10 @@ function postToLSD(data) {
         (error/* , response, body*/) => {
             if (error) {
                 debugLog(error.stack);
+                log.error(error.stack);
             } else {
                 debugLog(`Successfully uploaded data to ${hosts} at ${endpoint}`);
+                log.debug(`Successfully uploaded data to ${hosts} at ${endpoint}`);
                 // debugLog(body);
             }
         });
@@ -230,10 +235,12 @@ function getImagesFromAWS() {
         }, function (error, keys) {
             if (error) {
                 console.log('Error retrieving images from s3', error);
+                log.error(`Error retrieving images from s3': ${error}`);
                 fulfill({error: 'Error retrieving images from s3'});
             }
 
-            console.log('Successfully retrieved images from s3, about to fulfill.. keys.length: ', keys.length );
+            console.log('Successfully retrieved images from s3, about to fulfill.. keys.length: ', keys.length);
+            log.debug(`Successfully retrieved images from s3, about to fulfill.. keys.length: ' ${keys.length}`);
             fulfill(filterImages(keys));
         });
     });
@@ -297,6 +304,9 @@ if (fg.urls && fg.urls.length > 0) {
 
     if (s3Images) {
 
+        console.log('s3images = true');
+        log.debug('s3images = true');
+
         s3Images.then(function (data) {
 
             let constantElectionStoryUpdate = config.get('gnsElectionStoryConstantUpdate'),
@@ -324,10 +334,15 @@ if (fg.urls && fg.urls.length > 0) {
                 // failure
                 (error) => {
                     console.log(`Error: ${error}`);
+                    log.error(error);
                 }
             );
         });
     } else {
+
+        console.log('s3images = false');
+        log.debug('s3images = false');
+
         fg.processContent().then(
             // success
             (rssFeed) => {
@@ -344,9 +359,11 @@ if (fg.urls && fg.urls.length > 0) {
             // failure
             (error) => {
                 console.log(`Error: ${error}`);
+                log.error(error);
             }
         );
     }
 } else {
     debugLog('no updates');
+    log.debug('no updates');
 }

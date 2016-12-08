@@ -23,7 +23,8 @@ const request = require('request'),
     config = require('../config.js'),
     cloudamqpConnectionString = config.get('cloudamqpConnectionString'),
     fg = new FeedGenerator(),
-    log = require('cnn-logger')({logzio: {tag: 'cnn-google-newsstand'}});
+    logConfig = config.get('logConfig'),
+    log = require('cnn-logger')(logConfig);
 
 
 

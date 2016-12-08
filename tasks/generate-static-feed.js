@@ -35,7 +35,8 @@ const  request = require('request'),
     config = require('../config.js'),
     fg = new FeedGenerator(),
     enableElectionStory = config.get('gnsTurnOnElectionModule'),
-    log = require('cnn-logger')({logzio: {tag: 'cnn-google-newsstand'}}),
+    logConfig = config.get('logConfig'),
+    log = require('cnn-logger')(logConfig),
     POST_TO_LSD = false; // <---- TODO - SET THIS TO THE PROPER VALUE BASED ON WHAT YOU ARE WANTING TO DO
 
 let s3Images = undefined;

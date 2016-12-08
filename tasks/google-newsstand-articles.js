@@ -35,7 +35,8 @@ const request = require('request'),
     usFG = new FeedGenerator(),
     worldFG = new FeedGenerator(),
     enableElectionStory = config.get('gnsTurnOnElectionModule'),
-    log = require('cnn-logger')({logzio: {tag: 'cnn-google-newsstand'}});
+    logConfig = config.get('logConfig'),
+    log = require('cnn-logger')(logConfig);
 
 
 // connect to CloudAMQP and use/create the queue to subscribe to
